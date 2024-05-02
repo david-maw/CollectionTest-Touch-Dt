@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CollectionTest"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             BindingContext="{local:MainViewModel}"
+             x:Name="Page"
+             x:DataType="local:MainViewModel"
+             x:Class="CollectionTest.MainPage">
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="dt1" x:DataType="local:Person">
+            <VerticalStackLayout>
+                <VerticalStackLayout.Behaviors>
+                    <toolkit:TouchBehavior
+                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.ShowTouchCommand}"
+                            CommandParameter="{Binding}"
+                            LongPressDuration="750"
+                            LongPressCommand="{Binding Source={x:Reference Page}, Path=BindingContext.ShowLongPressCommand}"
+                            LongPressCommandParameter="{Binding}"/>
+                </VerticalStackLayout.Behaviors>
+                <Label Text="{Binding Name}" HorizontalOptions="Start" FontSize="Large" TextColor="Green"/>
+            </VerticalStackLayout>
+        </DataTemplate>
+        <DataTemplate x:Key="dt2" x:DataType="local:Person">
+            <VerticalStackLayout>
+                <VerticalStackLayout.Behaviors>
+                    <toolkit:TouchBehavior
+                            Command="{Binding Source={x:Reference Page}, Path=BindingContext.ShowTouchCommand}"
+                            CommandParameter="{Binding}"
+                            LongPressDuration="10000"
+                            LongPressCommand="{Binding Source={x:Reference Page}, Path=BindingContext.ShowLongPressCommand}"
+                            LongPressCommandParameter="{Binding}"/>
+                </VerticalStackLayout.Behaviors>
+                <Label Text="{Binding Name}" HorizontalOptions="Start" FontSize="Large" TextColor="Red"/>
+            </VerticalStackLayout>
+        </DataTemplate>
+        <Style TargetType="CollectionView">
+            <Style.Triggers>
+                <DataTrigger TargetType="CollectionView" Binding="{Binding TemplateSelector}" Value="false">
+                    <Setter Property="ItemTemplate" Value="{StaticResource dt1}"/>
+                </DataTrigger>
+                <DataTrigger TargetType="CollectionView" Binding="{Binding TemplateSelector}" Value="true">
+                    <Setter Property="ItemTemplate" Value="{StaticResource dt2}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ContentPage.Resources>
+    
+    <VerticalStackLayout>
+        <Label Text="{Binding CommandType,StringFormat='Command = {0}'}" HorizontalOptions="Start" FontSize="Medium"/>
+        <Label Text="{Binding CommandParameter,StringFormat='CommandParam = {0}'}" HorizontalOptions="Start" FontSize="Medium"/>
+        <Label Text="{Binding PriorCommandType,StringFormat='Prior Command = {0}'}" HorizontalOptions="Start" FontSize="Medium"/>
+        <Label Text="{Binding PriorCommandParameter,StringFormat='Prior CommandParameter = {0}'}" HorizontalOptions="Start" FontSize="Medium"/>
+        <CollectionView ItemsSource="{Binding Path=People}" Margin="0,30" ItemTemplate="{StaticResource dt1}"/>
+    </VerticalStackLayout>
+</ContentPage>
